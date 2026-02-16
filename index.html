@@ -3,23 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Générateur de Vidéo IA</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background-color: #eef2f3; padding: 50px; }
-        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: inline-block; max-width: 80%; }
-        h1 { color: #2c3e50; margin-bottom: 20px; }
-        p { color: #7f8c8d; font-size: 1.1em; }
-        .btn { background: linear-gradient(135deg, #6e8efb, #a777e3); color: white; padding: 15px 30px; border: none; border-radius: 50px; cursor: pointer; font-size: 18px; font-weight: bold; transition: transform 0.2s; }
-        .btn:active { transform: scale(0.95); }
-    </style>
+    <title>Mon App Vidéo IA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="card">
-        <h1>🎥 Mon App Vidéo IA</h1>
-        <p>Félicitations ! Ton projet est officiellement en ligne sur GitHub.</p>
-        <p>Ceci est la première page de ton futur empire de création.</p>
-        <br>
-        <button class="btn" onclick="alert('Bravo ! Tu viens de créer ta première page web !')">Tester le bouton</button>
+<body class="bg-slate-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-2xl shadow-lg max-w-sm w-full text-center mx-4">
+        <h1 class="text-2xl font-bold mb-4">🎥 Mon App Vidéo IA</h1>
+        
+        <textarea id="prompt" class="w-full p-3 border rounded-lg mb-4" rows="3" placeholder="Décris ta vidéo ici..."></textarea>
+        
+        <button onclick="alert('Idée reçue : ' + document.getElementById('prompt').value)" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-lg">
+            Générer la vidéo
+        </button>
     </div>
 </body>
 </html>
