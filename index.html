@@ -11,6 +11,13 @@
             50% { opacity: 0.5; }
         }
         .animate-pulse-slow { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        
+        /* Animation pour faire avancer la barre */
+        @keyframes grow {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+        .progress-fill { animation: grow 10s linear forwards; }
     </style>
 </head>
 <body class="bg-slate-100 flex items-center justify-center min-h-screen">
@@ -31,6 +38,10 @@
             Générer la vidéo
         </button>
 
+        <div id="progress-container" class="hidden w-full h-2 bg-gray-200 rounded-full mb-2 overflow-hidden">
+            <div id="progress-bar" class="h-full bg-blue-500"></div>
+        </div>
+
         <div id="video-container" class="w-full aspect-video bg-black rounded-xl flex flex-col items-center justify-center border-4 border-slate-800 shadow-inner">
             <p id="status-text" class="text-slate-500 text-sm italic text-center px-4">Ta vidéo apparaîtra ici...</p>
         </div>
@@ -40,8 +51,13 @@
         function startLoading() {
             const status = document.getElementById('status-text');
             const container = document.getElementById('video-container');
+            const progressContainer = document.getElementById('progress-container');
+            const progressBar = document.getElementById('progress-bar');
             
-            // On change le texte et on ajoute l'animation
+            // Afficher la barre et lancer l'animation
+            progressContainer.classList.remove('hidden');
+            progressBar.classList.add('progress-fill');
+
             status.innerText = "L'IA prépare votre vidéo style " + document.getElementById('style').value + "...";
             status.classList.add('animate-pulse-slow', 'text-blue-400');
             container.classList.add('border-blue-900');
