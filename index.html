@@ -29,6 +29,7 @@
             <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-md dark-card">
                 <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs">DS</div>
                 <span id="credits" class="text-xs font-bold text-blue-600">🪙 5 Jetons</span>
+                <button onclick="addTokens()" class="ml-1 bg-yellow-400 text-white text-[10px] px-2 py-0.5 rounded-full shadow-sm hover:scale-110 transition-transform">🎁 +3</button>
             </div>
             <button onclick="toggleDark()" class="bg-white p-2.5 rounded-full shadow-md dark-card text-xl">🌓</button>
         </div>
@@ -90,9 +91,15 @@
             document.getElementById('card').classList.toggle('dark-card');
         }
 
+        function addTokens() {
+            jetons += 3;
+            document.getElementById('credits').innerText = `🪙 ${jetons} Jetons`;
+            alert("Félicitations ! Vous avez reçu 3 jetons bonus. 🎁");
+        }
+
         function startProcess() {
             if (jetons <= 0) {
-                alert("Désolé ! Vous n'avez plus de jetons. 🪙");
+                alert("Désolé ! Vous n'avez plus de jetons. Cliquez sur le cadeau ! 🎁");
                 return;
             }
 
@@ -103,7 +110,6 @@
             const video = document.getElementById('demo-video');
             const actions = document.getElementById('actions');
             
-            // Diminuer les jetons
             jetons--;
             document.getElementById('credits').innerText = `🪙 ${jetons} Jetons`;
 
