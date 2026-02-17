@@ -12,7 +12,15 @@
         
         <textarea id="prompt" class="w-full p-3 border rounded-lg mb-4" rows="3" placeholder="Décris ta vidéo ici..."></textarea>
         
-        <button onclick="alert('Idée reçue : ' + document.getElementById('prompt').value)" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-lg">
+        <p class="text-sm font-semibold text-gray-600 mb-2 text-left">Choisir un style :</p>
+        <select id="style" class="w-full p-2 border rounded-lg mb-6 bg-gray-50">
+            <option value="anime">Style Anime (Japonais)</option>
+            <option value="realistic">Cinématique / Réaliste</option>
+            <option value="3d">Animation 3D (Pixar)</option>
+            <option value="pixel">Pixel Art (Jeux vidéo)</option>
+        </select>
+        
+        <button onclick="alert('Vidéo lancée en style : ' + document.getElementById('style').value)" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-lg">
             Générer la vidéo
         </button>
     </div>
