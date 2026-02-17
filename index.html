@@ -12,12 +12,11 @@
         }
         .animate-pulse-slow { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
         
-        /* Animation pour faire avancer la barre */
         @keyframes grow {
             from { width: 0%; }
             to { width: 100%; }
         }
-        .progress-fill { animation: grow 10s linear forwards; }
+        .progress-fill { animation: grow 5s linear forwards; }
     </style>
 </head>
 <body class="bg-slate-100 flex items-center justify-center min-h-screen">
@@ -34,17 +33,21 @@
             <option value="pixel">Pixel Art (Jeux vidéo)</option>
         </select>
         
-        <button onclick="startLoading()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-lg mb-6 active:scale-95 transition-transform">
+        <button id="generate-btn" onclick="startLoading()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-lg mb-6 active:scale-95 transition-transform">
             Générer la vidéo
         </button>
 
-        <div id="progress-container" class="hidden w-full h-2 bg-gray-200 rounded-full mb-2 overflow-hidden">
+        <div id="progress-container" class="hidden w-full h-2 bg-gray-200 rounded-full mb-4 overflow-hidden">
             <div id="progress-bar" class="h-full bg-blue-500"></div>
         </div>
 
-        <div id="video-container" class="w-full aspect-video bg-black rounded-xl flex flex-col items-center justify-center border-4 border-slate-800 shadow-inner">
+        <div id="video-container" class="w-full aspect-video bg-black rounded-xl flex flex-col items-center justify-center border-4 border-slate-800 shadow-inner mb-4">
             <p id="status-text" class="text-slate-500 text-sm italic text-center px-4">Ta vidéo apparaîtra ici...</p>
         </div>
+
+        <button id="download-btn" onclick="alert('Téléchargement lancé !')" class="hidden w-full bg-green-500 text-white py-2 rounded-lg font-bold text-lg flex items-center justify-center gap-2">
+            📥 Télécharger la vidéo
+        </button>
     </div>
 
     <script>
@@ -53,14 +56,23 @@
             const container = document.getElementById('video-container');
             const progressContainer = document.getElementById('progress-container');
             const progressBar = document.getElementById('progress-bar');
+            const downloadBtn = document.getElementById('download-btn');
+            const generateBtn = document.getElementById('generate-btn');
             
-            // Afficher la barre et lancer l'animation
+            generateBtn.disabled = true;
+            generateBtn.classList.add('opacity-50');
             progressContainer.classList.remove('hidden');
             progressBar.classList.add('progress-fill');
 
-            status.innerText = "L'IA prépare votre vidéo style " + document.getElementById('style').value + "...";
+            status.innerText = "L'IA génère votre vidéo...";
             status.classList.add('animate-pulse-slow', 'text-blue-400');
-            container.classList.add('border-blue-900');
+
+            // Simulation : après 5 secondes, on affiche le bouton télécharger
+            setTimeout(() => {
+                status.innerText = "Vidéo prête ! (Démo)";
+                status.classList.remove('animate-pulse-slow');
+                downloadBtn.classList.remove('hidden');
+            }, 5000);
         }
     </script>
 </body>
