@@ -24,29 +24,30 @@
                 <option value="Anime">Japonais / Anime</option>
                 <option value="Cinéma">Réaliste / Cinéma</option>
                 <option value="3D">Animation 3D</option>
-                <option value="Cyberpunk">Cyberpunk / Néon</option>
             </select>
         </div>
         
-        <button id="btn-gen" onclick="startProcess()" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl font-bold text-xl shadow-lg hover:shadow-blue-200 active:scale-95 transition-all mb-6">
+        <button id="btn-gen" onclick="startProcess()" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl font-bold text-xl shadow-lg active:scale-95 transition-all mb-6">
             CRÉER LA VIDÉO
         </button>
 
         <div id="p-container" class="hidden mb-6 text-left">
-            <div class="flex justify-between mb-1"><span class="text-xs font-bold text-blue-600 italic">Alchimie en cours...</span></div>
             <div class="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
-                <div id="p-bar" class="h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
+                <div id="p-bar" class="h-full bg-blue-500"></div>
             </div>
         </div>
 
-        <div id="v-container" class="w-full aspect-video bg-gray-900 rounded-2xl flex flex-col items-center justify-center border-4 border-white shadow-xl mb-6 overflow-hidden">
-            <p id="status" class="text-gray-500 text-sm font-medium px-6">Votre chef-d'œuvre apparaîtra ici...</p>
+        <div id="v-container" class="w-full aspect-video bg-gray-900 rounded-2xl flex flex-col items-center justify-center border-4 border-white shadow-xl mb-6 overflow-hidden relative">
+            <p id="status" class="text-gray-500 text-sm font-medium px-6 z-10">Votre chef-d'œuvre apparaîtra ici...</p>
+            <video id="demo-video" class="hidden absolute inset-0 w-full h-full object-cover" loop muted playsinline>
+                <source src="https://assets.mixkit.co/videos/preview/mixkit-futuristic-robot-dancing-in-a-dark-room-43402-large.mp4" type="video/mp4">
+            </video>
         </div>
 
         <div id="actions" class="hidden grid grid-cols-2 gap-3">
-            <button onclick="alert('Lien copié !')" class="bg-gray-100 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-200 transition-all flex items-center justify-center gap-2">🔗 Partager</button>
-            <button onclick="location.reload()" class="bg-red-50 text-red-600 py-3 rounded-xl font-bold hover:bg-red-100 transition-all">🔄 Refaire</button>
-            <button onclick="alert('Téléchargement...')" class="col-span-2 bg-green-500 text-white py-3 rounded-xl font-bold shadow-md hover:bg-green-600 transition-all mt-2 italic">📥 Télécharger le fichier .MP4</button>
+            <button onclick="alert('Lien copié !')" class="bg-gray-100 text-gray-700 py-3 rounded-xl font-bold flex items-center justify-center gap-2">🔗 Partager</button>
+            <button onclick="location.reload()" class="bg-red-50 text-red-600 py-3 rounded-xl font-bold">🔄 Refaire</button>
+            <button onclick="alert('Téléchargement...')" class="col-span-2 bg-green-500 text-white py-3 rounded-xl font-bold mt-2">📥 Télécharger le fichier .MP4</button>
         </div>
     </div>
 
@@ -56,26 +57,27 @@
             const pCont = document.getElementById('p-container');
             const pBar = document.getElementById('p-bar');
             const status = document.getElementById('status');
+            const video = document.getElementById('demo-video');
             const vCont = document.getElementById('v-container');
             const actions = document.getElementById('actions');
             
             btn.disabled = true;
-            btn.innerText = "PATIENTEZ...";
+            btn.innerText = "ALCHIMIE EN COURS...";
             pCont.classList.remove('hidden');
             pBar.classList.add('progress-fill');
-            status.innerText = "L'intelligence artificielle génère votre scène...";
+            status.innerText = "L'IA génère les images...";
             status.classList.add('animate-pulse-slow', 'text-blue-400');
 
             setTimeout(() => {
-                status.innerText = "VIDÉO TERMINÉE ! ✨";
-                status.classList.remove('animate-pulse-slow');
-                status.classList.replace('text-blue-400', 'text-green-400');
+                status.classList.add('hidden'); // On cache le texte
+                video.classList.remove('hidden'); // On montre la vidéo
+                video.play(); // On lance la vidéo
                 vCont.classList.add('border-green-500');
                 actions.classList.remove('hidden');
+                btn.innerText = "TERMINÉ !";
             }, 7000);
         }
     </script>
 </body>
             </html>
-
             
