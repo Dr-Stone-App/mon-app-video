@@ -3,74 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon App Vidéo IA</title>
+    <title>Vidéo IA Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @keyframes grow { from { width: 0%; } to { width: 100%; } }
         .progress-fill { animation: grow 5s linear forwards; }
         .dark-mode { background-color: #0f172a !important; color: white !important; }
         .dark-card { background-color: #1e293b !important; color: white !important; border: 1px solid #334155 !important; }
+        .hidden { display: none; }
     </style>
 </head>
-<body id="body" class="bg-slate-100 flex flex-col items-center min-h-screen p-4 font-sans transition-colors duration-300">
-    
-    <div class="w-full max-w-md flex justify-between items-center mb-4">
-        <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm dark-card">
-            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-inner">DS</div>
-            <span class="text-xs font-bold">Dr Stone</span>
-        </div>
-        <button onclick="toggleDark()" class="bg-gray-200 p-2 rounded-full shadow-md text-xl">🌓</button>
+<body id="body" class="bg-slate-100 flex flex-col items-center min-h-screen font-sans transition-colors duration-300">
+
+    <div id="splash-screen" class="flex flex-col items-center justify-center flex-grow p-6 text-center">
+        <div class="text-6xl mb-6">🎬</div>
+        <h1 class="text-4xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Vidéo IA Pro</h1>
+        <p class="text-gray-500 mb-8 max-w-xs">Transformez vos idées en films incroyables grâce à l'intelligence artificielle.</p>
+        <button onclick="showApp()" class="bg-blue-600 text-white px-10 py-4 rounded-full font-bold text-xl shadow-xl hover:scale-105 transition-transform">
+            DÉMARRER ✨
+        </button>
     </div>
 
-    <div id="card" class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full text-center transition-colors duration-300">
-        <h1 class="text-3xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">🎥 Vidéo IA Pro</h1>
-        
-        <textarea id="prompt" class="w-full p-4 border-2 border-gray-100 rounded-xl mb-4 focus:border-blue-500 outline-none transition-all text-black" rows="3" placeholder="Décris ta vision ici..."></textarea>
-        
-        <div class="flex flex-col text-left mb-6">
-            <label class="text-xs font-bold text-gray-400 uppercase ml-1 mb-1">Style Artistique</label>
-            <select id="style" class="w-full p-3 border-2 border-gray-100 rounded-xl bg-gray-50 font-medium text-black">
-                <option value="Anime">Japonais / Anime</option>
-                <option value="Cinéma">Réaliste / Cinéma</option>
-                <option value="3D">Animation 3D</option>
-            </select>
+    <div id="main-app" class="hidden w-full max-w-md p-4">
+        <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm dark-card">
+                <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-sm">DS</div>
+                <span class="text-xs font-bold">Dr Stone</span>
+            </div>
+            <button onclick="toggleDark()" class="bg-gray-200 p-2 rounded-full shadow-md">🌓</button>
         </div>
-        
-        <button id="btn-gen" onclick="startProcess()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-xl shadow-lg active:scale-95 transition-all mb-6">
-            CRÉER LA VIDÉO
-        </button>
 
-        <div id="p-container" class="hidden mb-6">
-            <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div id="card" class="bg-white p-6 rounded-3xl shadow-2xl text-center transition-colors duration-300">
+            <h2 class="text-2xl font-bold mb-6 text-blue-600">Créateur Vidéo</h2>
+            
+            <textarea id="prompt" class="w-full p-4 border-2 border-gray-100 rounded-xl mb-4 focus:border-blue-500 outline-none text-black" rows="3" placeholder="Ex: Un chat sur la lune..."></textarea>
+            
+            <select id="style" class="w-full p-3 border-2 border-gray-100 rounded-xl mb-6 bg-gray-50 text-black">
+                <option>Style Anime</option>
+                <option>Réaliste</option>
+                <option>Animation 3D</option>
+            </select>
+            
+            <button id="btn-gen" onclick="startProcess()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg mb-6">
+                GÉNÉRER
+            </button>
+
+            <div id="p-container" class="hidden mb-6 h-2 bg-gray-100 rounded-full overflow-hidden">
                 <div id="p-bar" class="h-full bg-blue-500"></div>
             </div>
-        </div>
 
-        <div id="v-container" class="w-full aspect-video bg-gray-900 rounded-2xl flex flex-col items-center justify-center border-4 border-white shadow-xl mb-6 relative overflow-hidden">
-            <p id="status" class="text-gray-500 text-sm font-medium px-6 z-10 text-center">Votre chef-d'œuvre apparaîtra ici...</p>
-            <video id="demo-video" class="hidden absolute inset-0 w-full h-full object-cover" loop muted playsinline>
-                <source src="https://assets.mixkit.co/videos/preview/mixkit-futuristic-robot-dancing-in-a-dark-room-43402-large.mp4" type="video/mp4">
-            </video>
-        </div>
+            <div id="v-container" class="w-full aspect-video bg-gray-900 rounded-2xl flex items-center justify-center mb-6 relative overflow-hidden">
+                <p id="status" class="text-gray-500 text-sm px-6">Prêt à créer...</p>
+                <video id="demo-video" class="hidden absolute inset-0 w-full h-full object-cover" loop muted playsinline>
+                    <source src="https://assets.mixkit.co/videos/preview/mixkit-futuristic-robot-dancing-in-a-dark-room-43402-large.mp4" type="video/mp4">
+                </video>
+            </div>
 
-        <div id="actions" class="hidden grid grid-cols-2 gap-3 mb-6">
-            <button onclick="alert('Lien copié !')" class="bg-gray-100 text-gray-700 py-3 rounded-xl font-bold">🔗 Partager</button>
-            <button onclick="location.reload()" class="bg-red-50 text-red-600 py-3 rounded-xl font-bold">🔄 Refaire</button>
-        </div>
+            <div id="actions" class="hidden grid grid-cols-2 gap-3 mb-6">
+                <button class="bg-gray-100 py-3 rounded-xl font-bold text-sm text-gray-600">🔗 Partager</button>
+                <button onclick="location.reload()" class="bg-red-50 py-3 rounded-xl font-bold text-sm text-red-600">🔄 Reset</button>
+            </div>
 
-        <hr class="border-gray-100 mb-6">
-
-        <div class="text-left">
-            <h2 class="text-lg font-bold mb-4 flex items-center gap-2">📂 Mes créations</h2>
-            <div class="grid grid-cols-3 gap-2">
-                <img src="https://picsum.photos/id/1/200/200" class="rounded-lg border border-gray-100">
-                <img src="https://picsum.photos/id/2/200/200" class="rounded-lg border border-gray-100">
-                <img src="https://picsum.photos/id/3/200/200" class="rounded-lg border border-gray-100">
+            <div class="text-left border-t pt-6">
+                <h3 class="font-bold mb-4">📂 Mes créations</h3>
+                <div class="grid grid-cols-3 gap-2">
+                    <img src="https://picsum.photos/id/10/100/100" class="rounded-lg">
+                    <img src="https://picsum.photos/id/20/100/100" class="rounded-lg">
+                    <img src="https://picsum.photos/id/30/100/100" class="rounded-lg">
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        function showApp() {
+            document.getElementById('splash-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+        }
+
         function toggleDark() {
             document.getElementById('body').classList.toggle('dark-mode');
             document.getElementById('card').classList.toggle('dark-card');
@@ -85,21 +95,19 @@
             const actions = document.getElementById('actions');
             
             btn.disabled = true;
-            btn.innerText = "CRÉATION...";
+            btn.innerText = "IA EN ACTION...";
             pCont.classList.remove('hidden');
             pBar.classList.add('progress-fill');
-            status.innerText = "Traitement par l'IA...";
 
             setTimeout(() => {
                 status.classList.add('hidden');
                 video.classList.remove('hidden');
                 video.play();
                 actions.classList.remove('hidden');
-                btn.innerText = "PRÊT !";
+                btn.innerText = "TERMINÉ !";
                 btn.classList.replace('bg-blue-600', 'bg-green-500');
             }, 5000);
         }
     </script>
 </body>
-        </html>
-        
+</html>
