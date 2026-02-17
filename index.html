@@ -11,16 +11,15 @@
         .dark-mode { background-color: #0f172a !important; color: white !important; }
         .dark-card { background-color: #1e293b !important; color: white !important; border: 1px solid #334155 !important; }
         .hidden { display: none; }
-        .btn-gradient { background: linear-gradient(to r, #2563eb, #7c3aed); }
     </style>
 </head>
 <body id="body" class="bg-slate-100 flex flex-col items-center min-h-screen font-sans transition-colors duration-300">
 
     <div id="splash-screen" class="flex flex-col items-center justify-center flex-grow p-6 text-center">
-        <div class="w-24 h-24 bg-white rounded-3xl shadow-xl flex items-center justify-center text-5xl mb-6 animate-bounce">🎬</div>
-        <h1 class="text-4xl font-extrabold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">Vidéo IA Pro</h1>
+        <div class="w-24 h-24 bg-white rounded-3xl shadow-xl flex items-center justify-center text-5xl mb-6">🎬</div>
+        <h1 class="text-4xl font-extrabold mb-4 text-blue-600">Vidéo IA Pro</h1>
         <p class="text-gray-500 mb-8 max-w-xs">L'application de Dr Stone pour créer des vidéos par IA en un clic.</p>
-        <button onclick="showApp()" class="btn-gradient text-white px-12 py-4 rounded-full font-bold text-xl shadow-2xl hover:scale-105 transition-transform">
+        <button onclick="showApp()" class="bg-blue-600 text-white px-12 py-4 rounded-full font-bold text-xl shadow-2xl active:scale-95 transition-transform">
             COMMENCER ✨
         </button>
     </div>
@@ -29,38 +28,34 @@
         <div class="flex justify-between items-center mb-6">
             <div class="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md dark-card">
                 <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold">DS</div>
-                <span class="text-sm font-bold tracking-tight">Dr Stone</span>
+                <span class="text-sm font-bold tracking-tight text-black">Dr Stone</span>
             </div>
             <button onclick="toggleDark()" class="bg-white p-2.5 rounded-full shadow-md dark-card text-xl">🌓</button>
         </div>
 
         <div id="card" class="bg-white p-6 rounded-[2.5rem] shadow-2xl transition-colors duration-300">
-            <h2 class="text-2xl font-black mb-6 text-gray-800 dark:text-white">Studio de Création</h2>
+            <h2 class="text-2xl font-black mb-6 text-gray-800">Studio de Création</h2>
             
             <textarea id="prompt" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-4 focus:border-blue-500 outline-none text-black bg-gray-50" rows="3" placeholder="Décris ta vidéo..."></textarea>
             
-            <div class="text-left mb-6">
+            <div class="text-left mb-6 text-black">
                 <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-1">Style Visuel</label>
                 <select id="style" class="w-full p-3 mt-1 border-2 border-gray-100 rounded-xl bg-gray-50 text-black font-medium">
                     <option>Japonais / Anime</option>
                     <option>Cinématique Réaliste</option>
                     <option>3D Animation</option>
-                    <option>Cyberpunk Néon</option>
                 </select>
             </div>
             
-            <button id="btn-gen" onclick="startProcess()" class="w-full btn-gradient text-white py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-95 transition-all mb-6">
+            <button id="btn-gen" onclick="startProcess()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-95 transition-all mb-6">
                 GÉNÉRER LA VIDÉO
             </button>
 
-            <div id="p-container" class="hidden mb-6">
-                <div class="flex justify-between mb-1"><span class="text-xs font-bold text-blue-500 italic animate-pulse">IA en plein travail...</span></div>
-                <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div id="p-bar" class="h-full bg-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.6)]"></div>
-                </div>
+            <div id="p-container" class="hidden mb-6 h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div id="p-bar" class="h-full bg-blue-500"></div>
             </div>
 
-            <div id="v-container" class="w-full aspect-video bg-gray-950 rounded-3xl flex items-center justify-center mb-6 relative overflow-hidden border-4 border-transparent transition-all">
+            <div id="v-container" class="w-full aspect-video bg-gray-900 rounded-3xl flex items-center justify-center mb-6 relative overflow-hidden border-4 border-transparent transition-all">
                 <p id="status" class="text-gray-500 text-sm font-medium px-8 text-center">Ta vidéo apparaîtra ici...</p>
                 <video id="demo-video" class="hidden absolute inset-0 w-full h-full object-cover" loop muted playsinline>
                     <source src="https://assets.mixkit.co/videos/preview/mixkit-futuristic-robot-dancing-in-a-dark-room-43402-large.mp4" type="video/mp4">
@@ -69,20 +64,18 @@
 
             <div id="actions" class="hidden space-y-3 mb-8">
                 <div class="grid grid-cols-2 gap-3">
-                    <button onclick="alert('Lien copié !')" class="bg-gray-100 py-3 rounded-xl font-bold text-gray-600 dark:text-gray-400">🔗 Partager</button>
+                    <button onclick="alert('Lien copié !')" class="bg-gray-100 py-3 rounded-xl font-bold text-gray-600">🔗 Partager</button>
                     <button onclick="location.reload()" class="bg-red-50 py-3 rounded-xl font-bold text-red-500">🔄 Refaire</button>
                 </div>
-                <button onclick="alert('Téléchargement...')" class="w-full bg-green-500 text-white py-3 rounded-xl font-bold shadow-md">📥 Télécharger MP4</button>
+                <button class="w-full bg-green-500 text-white py-3 rounded-xl font-bold shadow-md text-sm">📥 Télécharger MP4</button>
             </div>
 
             <div class="text-left border-t border-gray-100 pt-6">
-                <h3 class="font-bold text-gray-800 dark:text-white mb-4 flex items-center justify-between">
-                    📂 Mes créations <span class="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">3 FILMS</span>
-                </h3>
+                <h3 class="font-bold text-gray-800 mb-4">📂 Mes créations</h3>
                 <div class="grid grid-cols-3 gap-2">
-                    <img src="https://picsum.photos/id/10/200/200" class="rounded-xl hover:scale-105 transition-transform">
-                    <img src="https://picsum.photos/id/20/200/200" class="rounded-xl hover:scale-105 transition-transform">
-                    <img src="https://picsum.photos/id/30/200/200" class="rounded-xl hover:scale-105 transition-transform">
+                    <img src="https://picsum.photos/id/10/200/200" class="rounded-xl">
+                    <img src="https://picsum.photos/id/20/200/200" class="rounded-xl">
+                    <img src="https://picsum.photos/id/30/200/200" class="rounded-xl">
                 </div>
             </div>
         </div>
@@ -112,7 +105,6 @@
             btn.innerText = "PATIENTEZ...";
             pCont.classList.remove('hidden');
             pBar.classList.add('progress-fill');
-            status.innerText = "L'IA génère les images...";
 
             setTimeout(() => {
                 status.classList.add('hidden');
@@ -121,9 +113,11 @@
                 vCont.classList.add('border-green-500');
                 actions.classList.remove('hidden');
                 btn.innerText = "TERMINÉ ! ✨";
-                btn.classList.replace('btn-gradient', 'bg-green-500');
+                btn.style.backgroundColor = "#22c55e"; // Vert
             }, 5000);
         }
     </script>
 </body>
 </html>
+
+        
