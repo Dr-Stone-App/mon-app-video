@@ -58,21 +58,18 @@
             const pBar = document.getElementById('p-bar');
             const status = document.getElementById('status');
             const video = document.getElementById('demo-video');
-            const vCont = document.getElementById('v-container');
             const actions = document.getElementById('actions');
             
             btn.disabled = true;
-            btn.innerText = "ALCHIMIE EN COURS...";
+            btn.innerText = "PATIENTEZ...";
             pCont.classList.remove('hidden');
             pBar.classList.add('progress-fill');
             status.innerText = "L'IA génère les images...";
-            status.classList.add('animate-pulse-slow', 'text-blue-400');
 
             setTimeout(() => {
-                status.classList.add('hidden'); // On cache le texte
-                video.classList.remove('hidden'); // On montre la vidéo
-                video.play(); // On lance la vidéo
-                vCont.classList.add('border-green-500');
+                status.classList.add('hidden');
+                video.classList.remove('hidden');
+                video.play(); // ÇA LANCE LA VIDÉO !
                 actions.classList.remove('hidden');
                 btn.innerText = "TERMINÉ !";
             }, 7000);
