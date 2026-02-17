@@ -6,74 +6,76 @@
     <title>Mon App Vidéo IA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        .animate-pulse-slow { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-        
-        @keyframes grow {
-            from { width: 0%; }
-            to { width: 100%; }
-        }
-        .progress-fill { animation: grow 5s linear forwards; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .animate-pulse-slow { animation: pulse 2s infinite; }
+        @keyframes grow { from { width: 0%; } to { width: 100%; } }
+        .progress-fill { animation: grow 7s linear forwards; }
     </style>
 </head>
-<body class="bg-slate-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-6 rounded-2xl shadow-lg max-w-sm w-full text-center mx-4">
-        <h1 class="text-2xl font-bold mb-4">🎥 Mon App Vidéo IA</h1>
+<body class="bg-slate-900 flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-6 rounded-3xl shadow-2xl max-w-md w-full text-center">
+        <h1 class="text-3xl font-extrabold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">🎥 Vidéo IA Pro</h1>
         
-        <textarea id="prompt" class="w-full p-3 border rounded-lg mb-4" rows="3" placeholder="Décris ta vidéo ici..."></textarea>
+        <textarea id="prompt" class="w-full p-4 border-2 border-gray-100 rounded-xl mb-4 focus:border-blue-500 outline-none transition-all" rows="3" placeholder="Décris ta vision ici..."></textarea>
         
-        <p class="text-sm font-semibold text-gray-600 mb-2 text-left">Choisir un style :</p>
-        <select id="style" class="w-full p-2 border rounded-lg mb-6 bg-gray-50">
-            <option value="anime">Style Anime (Japonais)</option>
-            <option value="realistic">Cinématique / Réaliste</option>
-            <option value="3d">Animation 3D (Pixar)</option>
-            <option value="pixel">Pixel Art (Jeux vidéo)</option>
-        </select>
+        <div class="flex flex-col text-left mb-6">
+            <label class="text-xs font-bold text-gray-400 uppercase ml-1 mb-1">Style Artistique</label>
+            <select id="style" class="w-full p-3 border-2 border-gray-100 rounded-xl bg-gray-50 font-medium">
+                <option value="Anime">Japonais / Anime</option>
+                <option value="Cinéma">Réaliste / Cinéma</option>
+                <option value="3D">Animation 3D</option>
+                <option value="Cyberpunk">Cyberpunk / Néon</option>
+            </select>
+        </div>
         
-        <button id="generate-btn" onclick="startLoading()" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-lg mb-6 active:scale-95 transition-transform">
-            Générer la vidéo
+        <button id="btn-gen" onclick="startProcess()" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 rounded-xl font-bold text-xl shadow-lg hover:shadow-blue-200 active:scale-95 transition-all mb-6">
+            CRÉER LA VIDÉO
         </button>
 
-        <div id="progress-container" class="hidden w-full h-2 bg-gray-200 rounded-full mb-4 overflow-hidden">
-            <div id="progress-bar" class="h-full bg-blue-500"></div>
+        <div id="p-container" class="hidden mb-6 text-left">
+            <div class="flex justify-between mb-1"><span class="text-xs font-bold text-blue-600 italic">Alchimie en cours...</span></div>
+            <div class="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+                <div id="p-bar" class="h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
+            </div>
         </div>
 
-        <div id="video-container" class="w-full aspect-video bg-black rounded-xl flex flex-col items-center justify-center border-4 border-slate-800 shadow-inner mb-4">
-            <p id="status-text" class="text-slate-500 text-sm italic text-center px-4">Ta vidéo apparaîtra ici...</p>
+        <div id="v-container" class="w-full aspect-video bg-gray-900 rounded-2xl flex flex-col items-center justify-center border-4 border-white shadow-xl mb-6 overflow-hidden">
+            <p id="status" class="text-gray-500 text-sm font-medium px-6">Votre chef-d'œuvre apparaîtra ici...</p>
         </div>
 
-        <button id="download-btn" onclick="alert('Téléchargement lancé !')" class="hidden w-full bg-green-500 text-white py-2 rounded-lg font-bold text-lg flex items-center justify-center gap-2">
-            📥 Télécharger la vidéo
-        </button>
+        <div id="actions" class="hidden grid grid-cols-2 gap-3">
+            <button onclick="alert('Lien copié !')" class="bg-gray-100 text-gray-700 py-3 rounded-xl font-bold hover:bg-gray-200 transition-all flex items-center justify-center gap-2">🔗 Partager</button>
+            <button onclick="location.reload()" class="bg-red-50 text-red-600 py-3 rounded-xl font-bold hover:bg-red-100 transition-all">🔄 Refaire</button>
+            <button onclick="alert('Téléchargement...')" class="col-span-2 bg-green-500 text-white py-3 rounded-xl font-bold shadow-md hover:bg-green-600 transition-all mt-2 italic">📥 Télécharger le fichier .MP4</button>
+        </div>
     </div>
 
     <script>
-        function startLoading() {
-            const status = document.getElementById('status-text');
-            const container = document.getElementById('video-container');
-            const progressContainer = document.getElementById('progress-container');
-            const progressBar = document.getElementById('progress-bar');
-            const downloadBtn = document.getElementById('download-btn');
-            const generateBtn = document.getElementById('generate-btn');
+        function startProcess() {
+            const btn = document.getElementById('btn-gen');
+            const pCont = document.getElementById('p-container');
+            const pBar = document.getElementById('p-bar');
+            const status = document.getElementById('status');
+            const vCont = document.getElementById('v-container');
+            const actions = document.getElementById('actions');
             
-            generateBtn.disabled = true;
-            generateBtn.classList.add('opacity-50');
-            progressContainer.classList.remove('hidden');
-            progressBar.classList.add('progress-fill');
-
-            status.innerText = "L'IA génère votre vidéo...";
+            btn.disabled = true;
+            btn.innerText = "PATIENTEZ...";
+            pCont.classList.remove('hidden');
+            pBar.classList.add('progress-fill');
+            status.innerText = "L'intelligence artificielle génère votre scène...";
             status.classList.add('animate-pulse-slow', 'text-blue-400');
 
-            // Simulation : après 5 secondes, on affiche le bouton télécharger
             setTimeout(() => {
-                status.innerText = "Vidéo prête ! (Démo)";
+                status.innerText = "VIDÉO TERMINÉE ! ✨";
                 status.classList.remove('animate-pulse-slow');
-                downloadBtn.classList.remove('hidden');
-            }, 5000);
+                status.classList.replace('text-blue-400', 'text-green-400');
+                vCont.classList.add('border-green-500');
+                actions.classList.remove('hidden');
+            }, 7000);
         }
     </script>
 </body>
-</html>
+            </html>
+
+            
