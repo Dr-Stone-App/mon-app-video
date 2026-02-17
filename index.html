@@ -20,9 +20,13 @@
             <option value="pixel">Pixel Art (Jeux vidéo)</option>
         </select>
         
-        <button onclick="alert('Vidéo lancée en style : ' + document.getElementById('style').value)" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-lg">
+        <button onclick="alert('Lancement de la création...')" class="w-full bg-blue-600 text-white py-2 rounded-lg font-bold text-lg mb-6">
             Générer la vidéo
         </button>
+
+        <div id="video-container" class="w-full aspect-video bg-black rounded-xl flex items-center justify-center border-4 border-slate-800 shadow-inner">
+            <p class="text-slate-500 text-sm italic">Ta vidéo apparaîtra ici...</p>
+        </div>
     </div>
 </body>
 </html>
