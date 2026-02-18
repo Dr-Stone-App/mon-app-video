@@ -8,7 +8,7 @@
     <style>
         @keyframes grow { from { width: 0%; } to { width: 100%; } }
         .progress-fill { animation: grow 5s linear forwards; }
-        .progress-turbo { animation: grow 2s linear forwards; } /* Plus rapide ! */
+        .progress-turbo { animation: grow 2s linear forwards; }
         .dark-mode { background-color: #0f172a !important; color: white !important; }
         .dark-card { background-color: #1e293b !important; color: white !important; border: 1px solid #334155 !important; }
         .hidden { display: none; }
@@ -44,7 +44,7 @@
         <div id="card" class="bg-white p-6 rounded-[2.5rem] shadow-2xl transition-colors duration-300">
             <h2 class="text-2xl font-black mb-6 text-gray-800">Studio de Création</h2>
             
-            <div class="flex items-center justify-between mb-4 px-2 bg-blue-50 p-3 rounded-xl dark:bg-slate-800">
+            <div class="flex items-center justify-between mb-4 px-2 bg-blue-50 p-3 rounded-xl dark:bg-slate-800 transition-colors">
                 <span class="text-sm font-bold text-blue-700 dark:text-blue-300">🚀 Mode Turbo (-2 🪙)</span>
                 <input type="checkbox" id="turbo-mode" class="w-5 h-5 accent-blue-600">
             </div>
@@ -69,6 +69,17 @@
             <div id="actions" class="hidden grid grid-cols-2 gap-3 mb-8">
                 <button class="bg-gray-100 py-3 rounded-xl font-bold text-gray-600">🔗 Partager</button>
                 <button onclick="location.reload()" class="bg-red-50 py-3 rounded-xl font-bold text-red-500">🔄 Refaire</button>
+            </div>
+
+            <div class="text-left border-t border-gray-100 pt-6">
+                <h3 class="font-bold text-gray-800 dark:text-white mb-4 flex items-center justify-between">
+                    📂 Mes créations <span class="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">3 FILMS</span>
+                </h3>
+                <div class="grid grid-cols-3 gap-2">
+                    <img src="https://picsum.photos/id/10/200/200" class="rounded-xl hover:scale-105 transition-transform">
+                    <img src="https://picsum.photos/id/20/200/200" class="rounded-xl hover:scale-105 transition-transform">
+                    <img src="https://picsum.photos/id/30/200/200" class="rounded-xl hover:scale-105 transition-transform">
+                </div>
             </div>
         </div>
     </div>
@@ -119,8 +130,8 @@
             btn.innerText = isTurbo ? "TURBO ACTIVÉ..." : "PATIENTEZ...";
             document.getElementById('p-container').classList.remove('hidden');
             
-            pBar.className = "h-full bg-blue-500"; // Reset
-            void pBar.offsetWidth; // Force restart animation
+            pBar.className = "h-full bg-blue-500"; 
+            void pBar.offsetWidth; 
             pBar.classList.add(isTurbo ? 'progress-turbo' : 'progress-fill');
 
             setTimeout(() => {
@@ -135,4 +146,5 @@
         }
     </script>
 </body>
-</html>
+    </html>
+    
