@@ -8,12 +8,19 @@
     <style>
         @keyframes grow { from { width: 0%; } to { width: 100%; } }
         .progress-fill { animation: grow 5s linear forwards; }
+        .progress-turbo { animation: grow 2s linear forwards; } /* Plus rapide ! */
         .dark-mode { background-color: #0f172a !important; color: white !important; }
         .dark-card { background-color: #1e293b !important; color: white !important; border: 1px solid #334155 !important; }
         .hidden { display: none; }
+        #notification { transition: all 0.5s ease; top: -100px; }
+        .show-note { top: 20px !important; }
     </style>
 </head>
 <body id="body" class="bg-slate-100 flex flex-col items-center min-h-screen font-sans transition-colors duration-300">
+
+    <div id="notification" class="fixed left-1/2 -translate-x-1/2 z-50 bg-green-500 text-white px-6 py-3 rounded-full shadow-2xl font-bold flex items-center gap-2">
+        <span id="note-msg">Succès !</span>
+    </div>
 
     <div id="splash-screen" class="flex flex-col items-center justify-center flex-grow p-6 text-center">
         <div class="w-24 h-24 bg-white rounded-3xl shadow-xl flex items-center justify-center text-5xl mb-6">🎬</div>
@@ -29,7 +36,7 @@
             <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-md dark-card">
                 <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs">DS</div>
                 <span id="credits" class="text-xs font-bold text-blue-600">🪙 5 Jetons</span>
-                <button onclick="addTokens()" class="ml-1 bg-yellow-400 text-white text-[10px] px-2 py-0.5 rounded-full shadow-sm hover:scale-110 transition-transform">🎁 +3</button>
+                <button onclick="addTokens()" class="ml-1 bg-yellow-400 text-white text-[10px] px-2 py-0.5 rounded-full shadow-sm hover:scale-110">🎁 +3</button>
             </div>
             <button onclick="toggleDark()" class="bg-white p-2.5 rounded-full shadow-md dark-card text-xl">🌓</button>
         </div>
@@ -37,13 +44,12 @@
         <div id="card" class="bg-white p-6 rounded-[2.5rem] shadow-2xl transition-colors duration-300">
             <h2 class="text-2xl font-black mb-6 text-gray-800">Studio de Création</h2>
             
+            <div class="flex items-center justify-between mb-4 px-2 bg-blue-50 p-3 rounded-xl dark:bg-slate-800">
+                <span class="text-sm font-bold text-blue-700 dark:text-blue-300">🚀 Mode Turbo (-2 🪙)</span>
+                <input type="checkbox" id="turbo-mode" class="w-5 h-5 accent-blue-600">
+            </div>
+
             <textarea id="prompt" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-4 focus:border-blue-500 outline-none text-black bg-gray-50" rows="3" placeholder="Décris ta vidéo..."></textarea>
-            
-            <select id="style" class="w-full p-3 mb-6 border-2 border-gray-100 rounded-xl bg-gray-50 text-black font-medium">
-                <option>Japonais / Anime</option>
-                <option>Cinématique Réaliste</option>
-                <option>3D Animation</option>
-            </select>
             
             <button id="btn-gen" onclick="startProcess()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-95 mb-6">
                 GÉNÉRER LA VIDÉO
@@ -53,27 +59,16 @@
                 <div id="p-bar" class="h-full bg-blue-500"></div>
             </div>
 
-            <div id="v-container" class="w-full aspect-video bg-gray-900 rounded-3xl flex items-center justify-center mb-6 relative overflow-hidden border-4 border-transparent">
+            <div id="v-container" class="w-full aspect-video bg-gray-900 rounded-3xl flex items-center justify-center mb-6 relative overflow-hidden">
                 <p id="status" class="text-gray-500 text-sm font-medium px-8 text-center">Ta vidéo apparaîtra ici...</p>
                 <video id="demo-video" class="hidden absolute inset-0 w-full h-full object-cover" loop muted playsinline>
                     <source src="https://assets.mixkit.co/videos/preview/mixkit-futuristic-robot-dancing-in-a-dark-room-43402-large.mp4" type="video/mp4">
                 </video>
             </div>
 
-            <div id="actions" class="hidden space-y-3 mb-8 text-center">
-                <div class="grid grid-cols-2 gap-3">
-                    <button class="bg-gray-100 py-3 rounded-xl font-bold text-gray-600">🔗 Partager</button>
-                    <button onclick="location.reload()" class="bg-red-50 py-3 rounded-xl font-bold text-red-500">🔄 Refaire</button>
-                </div>
-            </div>
-
-            <div class="text-left border-t border-gray-100 pt-6">
-                <h3 class="font-bold text-gray-800 mb-4">📂 Mes créations</h3>
-                <div class="grid grid-cols-3 gap-2">
-                    <img src="https://picsum.photos/id/10/200/200" class="rounded-xl">
-                    <img src="https://picsum.photos/id/20/200/200" class="rounded-xl">
-                    <img src="https://picsum.photos/id/30/200/200" class="rounded-xl">
-                </div>
+            <div id="actions" class="hidden grid grid-cols-2 gap-3 mb-8">
+                <button class="bg-gray-100 py-3 rounded-xl font-bold text-gray-600">🔗 Partager</button>
+                <button onclick="location.reload()" class="bg-red-50 py-3 rounded-xl font-bold text-red-500">🔄 Refaire</button>
             </div>
         </div>
     </div>
@@ -91,41 +86,52 @@
             document.getElementById('card').classList.toggle('dark-card');
         }
 
+        function notify(msg) {
+            const n = document.getElementById('notification');
+            document.getElementById('note-msg').innerText = msg;
+            n.classList.add('show-note');
+            setTimeout(() => n.classList.remove('show-note'), 3000);
+        }
+
         function addTokens() {
             jetons += 3;
             document.getElementById('credits').innerText = `🪙 ${jetons} Jetons`;
-            alert("Félicitations ! Vous avez reçu 3 jetons bonus. 🎁");
+            notify("Bonus ajouté ! +3 🪙");
         }
 
         function startProcess() {
-            if (jetons <= 0) {
-                alert("Désolé ! Vous n'avez plus de jetons. Cliquez sur le cadeau ! 🎁");
+            const isTurbo = document.getElementById('turbo-mode').checked;
+            const prix = isTurbo ? 2 : 1;
+            const temps = isTurbo ? 2000 : 5000;
+
+            if (jetons < prix) {
+                notify("Jetons insuffisants ! ❌");
                 return;
             }
 
-            const btn = document.getElementById('btn-gen');
-            const pCont = document.getElementById('p-container');
-            const pBar = document.getElementById('p-bar');
-            const status = document.getElementById('status');
-            const video = document.getElementById('demo-video');
-            const actions = document.getElementById('actions');
-            
-            jetons--;
+            jetons -= prix;
             document.getElementById('credits').innerText = `🪙 ${jetons} Jetons`;
 
+            const btn = document.getElementById('btn-gen');
+            const pBar = document.getElementById('p-bar');
+            
             btn.disabled = true;
-            btn.innerText = "PATIENTEZ...";
-            pCont.classList.remove('hidden');
-            pBar.classList.add('progress-fill');
+            btn.innerText = isTurbo ? "TURBO ACTIVÉ..." : "PATIENTEZ...";
+            document.getElementById('p-container').classList.remove('hidden');
+            
+            pBar.className = "h-full bg-blue-500"; // Reset
+            void pBar.offsetWidth; // Force restart animation
+            pBar.classList.add(isTurbo ? 'progress-turbo' : 'progress-fill');
 
             setTimeout(() => {
-                status.classList.add('hidden');
-                video.classList.remove('hidden');
-                video.play();
-                actions.classList.remove('hidden');
+                document.getElementById('status').classList.add('hidden');
+                document.getElementById('demo-video').classList.remove('hidden');
+                document.getElementById('demo-video').play();
+                document.getElementById('actions').classList.remove('hidden');
                 btn.innerText = "TERMINÉ ! ✨";
                 btn.style.backgroundColor = "#22c55e";
-            }, 5000);
+                notify("Vidéo prête ! 🎬");
+            }, temps);
         }
     </script>
 </body>
