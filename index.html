@@ -1,30 +1,65 @@
-<div id="main-app" class="hidden w-full max-w-md p-4">
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vidéo IA Pro - Dr Stone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes grow { from { width: 0%; } to { width: 100%; } }
+        .progress-fill { animation: grow 5s linear forwards; }
+        .progress-turbo { animation: grow 2s linear forwards; }
+        .dark-mode { background-color: #0f172a !important; color: white !important; }
+        .dark-card { background-color: #1e293b !important; color: white !important; border: 1px solid #334155 !important; }
+        .hidden { display: none; }
+        #notification { transition: all 0.5s ease; top: -100px; }
+        .show-note { top: 20px !important; }
+    </style>
+</head>
+<body id="body" class="bg-slate-100 flex flex-col items-center min-h-screen font-sans transition-colors duration-300">
+
+    <div id="notification" class="fixed left-1/2 -translate-x-1/2 z-[200] bg-green-500 text-white px-6 py-3 rounded-full shadow-2xl font-bold flex items-center gap-2">
+        <span id="note-msg">Succès !</span>
+    </div>
+
+    <div id="splash-screen" class="flex flex-col items-center justify-center flex-grow p-6 text-center">
+        <div class="w-24 h-24 bg-white rounded-3xl shadow-xl flex items-center justify-center text-5xl mb-6">🎬</div>
+        <h1 class="text-4xl font-extrabold mb-4 text-blue-600">Vidéo IA Pro</h1>
+        <p class="text-gray-500 mb-8 max-w-xs">L'application de Dr Stone pour créer des vidéos par IA en un clic.</p>
+        <button onclick="showApp()" class="bg-blue-600 text-white px-12 py-4 rounded-full font-bold text-xl shadow-2xl active:scale-95">
+            COMMENCER ✨
+        </button>
+    </div>
+
+    <div id="main-app" class="hidden w-full max-w-md p-4">
+        
         <div class="flex justify-between items-center mb-6">
             <div onclick="openProfile()" class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-md dark-card cursor-pointer hover:bg-gray-50 transition-colors">
                 <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs">DS</div>
-                <span id="user-name" class="text-xs font-bold text-black">Dr Stone</span>
-                <span id="credits" class="text-[10px] font-bold text-blue-600 border-l pl-2">🪙 5</span>
+                <span id="user-name" class="text-xs font-bold text-black dark:text-white">Dr Stone</span>
+                <span id="credits" class="text-[10px] font-bold text-blue-600 border-l pl-2 ml-1">🪙 5</span>
+                <button onclick="event.stopPropagation(); addTokens()" class="bg-yellow-400 text-white text-[10px] px-2 py-0.5 rounded-full shadow-sm">🎁 +3</button>
             </div>
             <button onclick="toggleDark()" class="bg-white p-2.5 rounded-full shadow-md dark-card text-xl">🌓</button>
         </div>
 
-        <div id="profile-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
-            <div class="bg-white dark:bg-slate-900 w-full max-w-xs rounded-[2rem] p-8 shadow-2xl text-center">
-                <div class="w-20 h-20 bg-purple-600 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold mb-4 shadow-lg">DS</div>
-                <h3 class="font-black text-xl mb-2">Mon Profil</h3>
-                <input id="edit-name" type="text" class="w-full p-2 border rounded-lg text-center mb-4 text-black" value="Dr Stone">
-                <div class="bg-blue-50 dark:bg-slate-800 p-4 rounded-xl mb-6">
-                    <p class="text-sm text-gray-500 uppercase font-bold text-[10px]">Vidéos créées</p>
+        <div id="profile-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] flex items-center justify-center p-6">
+            <div class="bg-white dark:bg-slate-900 w-full max-w-xs rounded-[2rem] p-8 shadow-2xl text-center border dark:border-slate-700">
+                <div class="w-20 h-20 bg-purple-600 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold mb-4">DS</div>
+                <h3 class="font-black text-xl mb-2 dark:text-white">Mon Profil</h3>
+                <input id="edit-name" type="text" class="w-full p-2 border rounded-xl text-center mb-4 text-black bg-gray-50" value="Dr Stone">
+                <div class="bg-blue-50 dark:bg-slate-800 p-4 rounded-2xl mb-6">
+                    <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Vidéos créées</p>
                     <p id="total-vids" class="text-2xl font-black text-blue-600">3</p>
                 </div>
-                <button onclick="saveProfile()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold">Enregistrer</button>
+                <button onclick="saveProfile()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold shadow-lg active:scale-95">Enregistrer</button>
             </div>
         </div>
 
         <div id="card" class="bg-white p-6 rounded-[2.5rem] shadow-2xl transition-colors duration-300">
             <h2 class="text-2xl font-black mb-6 text-gray-800">Studio de Création</h2>
             
-            <div class="flex items-center justify-between mb-4 px-2 bg-blue-50 p-3 rounded-xl dark:bg-slate-800 transition-colors">
+            <div class="flex items-center justify-between mb-4 px-2 bg-blue-50 p-3 rounded-xl dark:bg-slate-800">
                 <span class="text-sm font-bold text-blue-700 dark:text-blue-300">🚀 Mode Turbo (-2 🪙)</span>
                 <input type="checkbox" id="turbo-mode" class="w-5 h-5 accent-blue-600">
             </div>
@@ -52,13 +87,13 @@
             </div>
 
             <div class="text-left border-t border-gray-100 pt-6">
-                <h3 class="font-bold text-gray-800 dark:text-white mb-4 flex items-center justify-between">
+                <h3 class="font-bold text-gray-800 dark:text-white mb-4 flex items-center justify-between text-sm">
                     📂 Mes créations <span class="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">3 FILMS</span>
                 </h3>
                 <div class="grid grid-cols-3 gap-2">
-                    <img src="https://picsum.photos/id/10/200/200" class="rounded-xl hover:scale-105 transition-transform">
-                    <img src="https://picsum.photos/id/20/200/200" class="rounded-xl hover:scale-105 transition-transform">
-                    <img src="https://picsum.photos/id/30/200/200" class="rounded-xl hover:scale-105 transition-transform">
+                    <img src="https://picsum.photos/id/10/200/200" class="rounded-xl hover:scale-105 transition-transform shadow-sm">
+                    <img src="https://picsum.photos/id/20/200/200" class="rounded-xl hover:scale-105 transition-transform shadow-sm">
+                    <img src="https://picsum.photos/id/30/200/200" class="rounded-xl hover:scale-105 transition-transform shadow-sm">
                 </div>
             </div>
         </div>
@@ -75,6 +110,7 @@
 
         function toggleDark() {
             document.getElementById('body').classList.toggle('dark-mode');
+            document.getElementById('card').classList.toggle('dark-card');
         }
 
         function openProfile() {
@@ -95,6 +131,12 @@
             setTimeout(() => n.classList.remove('show-note'), 3000);
         }
 
+        function addTokens() {
+            jetons += 3;
+            document.getElementById('credits').innerText = `🪙 ${jetons}`;
+            notify("Bonus ajouté ! +3 🪙");
+        }
+
         function startProcess() {
             const isTurbo = document.getElementById('turbo-mode').checked;
             const prix = isTurbo ? 2 : 1;
@@ -106,7 +148,7 @@
             }
 
             jetons -= prix;
-            creations++; // On augmente le nombre de vidéos créées
+            creations++;
             document.getElementById('credits').innerText = `🪙 ${jetons}`;
             document.getElementById('total-vids').innerText = creations;
 
@@ -131,5 +173,7 @@
                 notify("Vidéo générée ! 🎬");
             }, temps);
         }
-                </script>
-                
+    </script>
+</body>
+        </html>
+        
