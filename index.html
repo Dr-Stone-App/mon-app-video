@@ -1,189 +1,120 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vidéo IA Pro - Dr Stone</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes grow { from { width: 0%; } to { width: 100%; } }
-        .progress-fill { animation: grow 5s linear forwards; }
-        .progress-turbo { animation: grow 2s linear forwards; }
-        .dark-mode { background-color: #0f172a !important; color: white !important; }
-        .dark-card { background-color: #1e293b !important; color: white !important; border: 1px solid #334155 !important; }
-        .hidden { display: none; }
-        #notification { transition: all 0.5s ease; top: -100px; }
-        .show-note { top: 20px !important; }
-    </style>
-</head>
-<body id="body" class="bg-slate-100 flex flex-col items-center min-h-screen font-sans transition-colors duration-300">
+<script>
+    let jetons = 5;
+    let creations = 3;
 
-    <div id="notification" class="fixed left-1/2 -translate-x-1/2 z-[200] bg-green-500 text-white px-6 py-3 rounded-full shadow-2xl font-bold flex items-center gap-2">
-        <span id="note-msg">Succès !</span>
-    </div>
+    // BIBLIOTHÈQUE DE THÈMES (Vidéos gratuites de haute qualité)
+    const bibliotheque = {
+        "robot": "https://assets.mixkit.co/videos/preview/mixkit-futuristic-robot-dancing-in-a-dark-room-43402-large.mp4",
+        "nature": "https://assets.mixkit.co/videos/preview/mixkit-beautiful-aerial-view-of-a-forest-and-mountains-1533-large.mp4",
+        "espace": "https://assets.mixkit.co/videos/preview/mixkit-stars-in-the-space-1604-large.mp4",
+        "tech": "https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-a-circuit-board-1540-large.mp4",
+        "cyberpunk": "https://assets.mixkit.co/videos/preview/mixkit-city-traffic-at-night-with-neon-lights-2483-large.mp4",
+        "anime": "https://assets.mixkit.co/videos/preview/mixkit-female-anime-character-in-the-rain-48766-large.mp4",
+        "sport": "https://assets.mixkit.co/videos/preview/mixkit-man-training-in-the-gym-4801-large.mp4",
+        "ocean": "https://assets.mixkit.co/videos/preview/mixkit-waves-coming-to-the-shore-line-1538-large.mp4",
+        "defaut": "https://assets.mixkit.co/videos/preview/mixkit-abstract-fast-motion-light-trails-34255-large.mp4"
+    };
 
-    <div id="splash-screen" class="flex flex-col items-center justify-center flex-grow p-6 text-center">
-        <div class="w-24 h-24 bg-white rounded-3xl shadow-xl flex items-center justify-center text-5xl mb-6 shadow-blue-200">🎬</div>
-        <h1 class="text-4xl font-extrabold mb-4 text-blue-600">Vidéo IA Pro</h1>
-        <p class="text-gray-500 mb-8 max-w-xs">L'application de Dr Stone pour créer des vidéos par IA en un clic.</p>
-        <button onclick="showApp()" class="bg-blue-600 text-white px-12 py-4 rounded-full font-bold text-xl shadow-2xl active:scale-95 transition-transform">
-            COMMENCER ✨
-        </button>
-    </div>
+    function showApp() {
+        document.getElementById('splash-screen').classList.add('hidden');
+        document.getElementById('main-app').classList.remove('hidden');
+    }
 
-    <div id="main-app" class="hidden w-full max-w-md p-4">
+    function toggleDark() {
+        document.getElementById('body').classList.toggle('dark-mode');
+        document.getElementById('card').classList.toggle('dark-card');
+    }
+
+    function openProfile() {
+        document.getElementById('profile-modal').classList.remove('hidden');
+    }
+
+    function saveProfile() {
+        const newName = document.getElementById('edit-name').value;
+        document.getElementById('user-name').innerText = newName;
+        document.getElementById('profile-modal').classList.add('hidden');
+        notify("Profil mis à jour ! ✅");
+    }
+
+    function notify(msg) {
+        const n = document.getElementById('notification');
+        document.getElementById('note-msg').innerText = msg;
+        n.classList.add('show-note');
+        setTimeout(() => n.classList.remove('show-note'), 3000);
+    }
+
+    function addTokens() {
+        jetons += 3;
+        document.getElementById('credits').innerText = `🪙 ${jetons}`;
+        notify("Bonus ajouté ! +3 🪙");
+    }
+
+    function viewImage(src) {
+        const modal = document.createElement('div');
+        modal.className = "fixed inset-0 bg-black/90 z-[300] flex items-center justify-center p-4 cursor-pointer";
+        modal.innerHTML = `<img src="${src}" class="max-w-full max-h-full rounded-2xl shadow-2xl scale-100 transition-all duration-300">`;
+        modal.onclick = () => modal.remove();
+        document.body.appendChild(modal);
+    }
+
+    function startProcess() {
+        const promptRaw = document.getElementById('prompt').value;
+        const prompt = promptRaw.toLowerCase();
+        const isTurbo = document.getElementById('turbo-mode').checked;
+        const prix = isTurbo ? 2 : 1;
+        const temps = isTurbo ? 2000 : 5000;
+
+        if (jetons < prix) {
+            notify("Plus de jetons ! 🎁");
+            return;
+        }
+
+        // Déduction
+        jetons -= prix;
+        creations++;
+        document.getElementById('credits').innerText = `🪙 ${jetons}`;
+        document.getElementById('total-vids').innerText = creations;
+
+        const btn = document.getElementById('btn-gen');
+        const pBar = document.getElementById('p-bar');
         
-        <div class="flex justify-between items-center mb-6">
-            <div onclick="openProfile()" class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-md dark-card cursor-pointer hover:bg-gray-50 transition-all">
-                <div class="w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xs">DS</div>
-                <span id="user-name" class="text-xs font-bold text-black dark:text-white">Dr Stone</span>
-                <span id="credits" class="text-[10px] font-bold text-blue-600 border-l pl-2 ml-1">🪙 5</span>
-                <button onclick="event.stopPropagation(); addTokens()" class="bg-yellow-400 text-white text-[10px] px-2 py-0.5 rounded-full shadow-sm hover:scale-110 active:scale-90 transition-transform">🎁 +3</button>
-            </div>
-            <button onclick="toggleDark()" class="bg-white p-2.5 rounded-full shadow-md dark-card text-xl active:rotate-45 transition-transform">🌓</button>
-        </div>
+        btn.disabled = true;
+        btn.innerText = "SYNTHÈSE EN COURS...";
+        document.getElementById('p-container').classList.remove('hidden');
+        pBar.className = "h-full bg-blue-500"; 
+        void pBar.offsetWidth; 
+        pBar.classList.add(isTurbo ? 'progress-turbo' : 'progress-fill');
 
-        <div id="profile-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] flex items-center justify-center p-6">
-            <div class="bg-white dark:bg-slate-900 w-full max-w-xs rounded-[2.5rem] p-8 shadow-2xl text-center border dark:border-slate-700">
-                <div class="w-20 h-20 bg-purple-600 rounded-full mx-auto flex items-center justify-center text-white text-3xl font-bold mb-4">DS</div>
-                <h3 class="font-black text-xl mb-2 dark:text-white">Mon Profil</h3>
-                <input id="edit-name" type="text" class="w-full p-3 border rounded-xl text-center mb-4 text-black bg-gray-50 font-bold" value="Dr Stone">
-                <div class="bg-blue-50 dark:bg-slate-800 p-4 rounded-2xl mb-6">
-                    <p class="text-[10px] text-gray-400 uppercase font-bold tracking-widest">Vidéos créées</p>
-                    <p id="total-vids" class="text-2xl font-black text-blue-600">3</p>
-                </div>
-                <button onclick="saveProfile()" class="w-full bg-blue-600 text-white py-4 rounded-xl font-bold shadow-lg active:scale-95">Enregistrer</button>
-            </div>
-        </div>
+        // LOGIQUE DE SÉLECTION DE LA VIDÉO
+        let videoChoisie = bibliotheque["defaut"];
+        if(prompt.includes("robot") || prompt.includes("futur")) videoChoisie = bibliotheque["robot"];
+        else if(prompt.includes("nature") || prompt.includes("forêt") || prompt.includes("montagne")) videoChoisie = bibliotheque["nature"];
+        else if(prompt.includes("espace") || prompt.includes("étoile") || prompt.includes("planète")) videoChoisie = bibliotheque["espace"];
+        else if(prompt.includes("tech") || prompt.includes("code") || prompt.includes("ordi")) videoChoisie = bibliotheque["tech"];
+        else if(prompt.includes("cyberpunk") || prompt.includes("ville") || prompt.includes("nuit")) videoChoisie = bibliotheque["cyberpunk"];
+        else if(prompt.includes("anime") || prompt.includes("manga") || prompt.includes("dessin")) videoChoisie = bibliotheque["anime"];
+        else if(prompt.includes("sport") || prompt.includes("muscu") || prompt.includes("gym")) videoChoisie = bibliotheque["sport"];
+        else if(prompt.includes("océan") || prompt.includes("mer") || prompt.includes("plage")) videoChoisie = bibliotheque["ocean"];
 
-        <div id="card" class="bg-white p-6 rounded-[2.5rem] shadow-2xl transition-all duration-300">
-            <h2 class="text-2xl font-black mb-6 text-gray-800">Studio de Création</h2>
-            
-            <div class="flex items-center justify-between mb-4 px-2 bg-blue-50 p-3 rounded-xl dark:bg-slate-800">
-                <span class="text-sm font-bold text-blue-700 dark:text-blue-300">🚀 Mode Turbo (-2 🪙)</span>
-                <input type="checkbox" id="turbo-mode" class="w-5 h-5 accent-blue-600 cursor-pointer">
-            </div>
+        setTimeout(() => {
+            document.getElementById('status').classList.add('hidden');
+            const video = document.getElementById('demo-video');
+            video.src = videoChoisie; // Changement de la vidéo selon le prompt
+            video.classList.remove('hidden');
+            video.play();
 
-            <textarea id="prompt" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-4 focus:border-blue-500 outline-none text-black bg-gray-50 transition-colors" rows="3" placeholder="Décris ta vidéo..."></textarea>
-            
-            <button id="btn-gen" onclick="startProcess()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-95 mb-6 transition-all">
-                GÉNÉRER LA VIDÉO
-            </button>
-
-            <div id="p-container" class="hidden mb-6 h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div id="p-bar" class="h-full bg-blue-500"></div>
-            </div>
-
-            <div id="v-container" class="w-full aspect-video bg-gray-900 rounded-3xl flex items-center justify-center mb-6 relative overflow-hidden border-4 border-transparent shadow-inner">
-                <p id="status" class="text-gray-500 text-sm font-medium px-8 text-center">Ta vidéo apparaîtra ici...</p>
-                <video id="demo-video" class="hidden absolute inset-0 w-full h-full object-cover" loop muted playsinline>
-                    <source src="https://assets.mixkit.co/videos/preview/mixkit-futuristic-robot-dancing-in-a-dark-room-43402-large.mp4" type="video/mp4">
-                </video>
-            </div>
-
-            <div id="actions" class="hidden grid grid-cols-2 gap-3 mb-8">
-                <button onclick="notify('Lien copié ! 🔗')" class="bg-gray-100 py-3 rounded-xl font-bold text-gray-600 hover:bg-gray-200">Partager</button>
-                <button onclick="location.reload()" class="bg-red-50 py-3 rounded-xl font-bold text-red-500 hover:bg-red-100">🔄 Refaire</button>
-            </div>
-
-            <div class="text-left border-t border-gray-100 pt-6">
-                <h3 class="font-bold text-gray-800 dark:text-white mb-4 flex items-center justify-between text-sm">
-                    📂 Mes créations <span class="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full">3 FILMS</span>
-                </h3>
-                <div class="grid grid-cols-3 gap-2">
-                    <img src="https://picsum.photos/id/10/600/600" onclick="viewImage(this.src)" class="rounded-xl hover:scale-105 transition-transform shadow-sm cursor-zoom-in">
-                    <img src="https://picsum.photos/id/20/600/600" onclick="viewImage(this.src)" class="rounded-xl hover:scale-105 transition-transform shadow-sm cursor-zoom-in">
-                    <img src="https://picsum.photos/id/30/600/600" onclick="viewImage(this.src)" class="rounded-xl hover:scale-105 transition-transform shadow-sm cursor-zoom-in">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let jetons = 5;
-        let creations = 3;
-
-        function showApp() {
-            document.getElementById('splash-screen').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
-        }
-
-        function toggleDark() {
-            document.getElementById('body').classList.toggle('dark-mode');
-            document.getElementById('card').classList.toggle('dark-card');
-        }
-
-        function openProfile() {
-            document.getElementById('profile-modal').classList.remove('hidden');
-        }
-
-        function saveProfile() {
-            const newName = document.getElementById('edit-name').value;
-            document.getElementById('user-name').innerText = newName;
-            document.getElementById('profile-modal').classList.add('hidden');
-            notify("Profil mis à jour ! ✅");
-        }
-
-        function notify(msg) {
-            const n = document.getElementById('notification');
-            document.getElementById('note-msg').innerText = msg;
-            n.classList.add('show-note');
-            setTimeout(() => n.classList.remove('show-note'), 3000);
-        }
-
-        function addTokens() {
-            jetons += 3;
-            document.getElementById('credits').innerText = `🪙 ${jetons}`;
-            notify("Bonus ajouté ! +3 🪙");
-        }
-
-        function viewImage(src) {
-            const modal = document.createElement('div');
-            modal.className = "fixed inset-0 bg-black/90 z-[300] flex items-center justify-center p-4 cursor-pointer";
-            modal.innerHTML = `<img src="${src}" class="max-w-full max-h-full rounded-2xl shadow-2xl scale-95 transition-all duration-300" id="full-img">`;
-            modal.onclick = () => modal.remove();
-            document.body.appendChild(modal);
-            setTimeout(() => document.getElementById('full-img').classList.replace('scale-95', 'scale-100'), 10);
-        }
-
-        function startProcess() {
-            const isTurbo = document.getElementById('turbo-mode').checked;
-            const prix = isTurbo ? 2 : 1;
-            const temps = isTurbo ? 2000 : 5000;
-
-            if (jetons < prix) {
-                notify("Plus de jetons ! 🎁");
-                return;
+            // VOIX OFF : Lit le texte écrit par l'utilisateur
+            if ('speechSynthesis' in window) {
+                const narration = new SpeechSynthesisUtterance(promptRaw);
+                narration.lang = 'fr-FR';
+                narration.rate = 0.9; // Un peu plus lent pour faire pro
+                window.speechSynthesis.speak(narration);
             }
 
-            jetons -= prix;
-            creations++;
-            document.getElementById('credits').innerText = `🪙 ${jetons}`;
-            document.getElementById('total-vids').innerText = creations;
-
-            const btn = document.getElementById('btn-gen');
-            const pBar = document.getElementById('p-bar');
-            
-            btn.disabled = true;
-            btn.innerText = isTurbo ? "VITESSE TURBO..." : "IA EN ACTION...";
-            document.getElementById('p-container').classList.remove('hidden');
-            
-            pBar.className = "h-full bg-blue-500"; 
-            void pBar.offsetWidth; 
-            pBar.classList.add(isTurbo ? 'progress-turbo' : 'progress-fill');
-
-            setTimeout(() => {
-                document.getElementById('status').classList.add('hidden');
-                const video = document.getElementById('demo-video');
-                video.classList.remove('hidden');
-                video.play();
-                document.getElementById('actions').classList.remove('hidden');
-                btn.innerText = "TERMINÉ ! ✨";
-                btn.style.backgroundColor = "#22c55e";
-                notify("Vidéo générée ! 🎬");
-            }, temps);
-        }
-    </script>
-</body>
-    </html>
-    
+            document.getElementById('actions').classList.remove('hidden');
+            btn.innerText = "TERMINÉ ! ✨";
+            btn.style.backgroundColor = "#22c55e";
+            notify("Vidéo générée avec Voix Off ! 🎬");
+        }, temps);
+    }
+</script>
